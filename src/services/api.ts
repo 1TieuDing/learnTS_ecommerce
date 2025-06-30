@@ -13,3 +13,12 @@ export const registerAPI = (fullName: string, email: string, password: string, p
     const urlBackend = "/api/v1/user/register";
     return axios.post<IBackendRes<ILogin>>(urlBackend, { fullName, email, password, phone })
 }
+
+export const fetchAccountAPI = () => {
+    const urlBackend = "/api/v1/auth/account";
+    return axios.get<IBackendRes<IFetchAccount>>(urlBackend, {
+        headers: {
+            delay: 3000
+        }
+    })
+}
