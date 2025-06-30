@@ -2,8 +2,8 @@ import { getUsersAPI } from '@/services/api';
 import { dateRangeValidate } from '@/services/helper';
 import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import { Button, Space, Tag } from 'antd';
+import { ProTable } from '@ant-design/pro-components';
+import { Button } from 'antd';
 import { useRef, useState } from 'react';
 
 
@@ -100,6 +100,10 @@ const TableUser = () => {
                         if (createDateRange) {
                             query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`
                         }
+                    }
+
+                    if (sort && sort.createdAt) {
+                        query += `&sort=${sort.createdAt === "ascend" ? "createdAt" : "-createdAt"}`
                     }
 
                     const res = await getUsersAPI(query)
