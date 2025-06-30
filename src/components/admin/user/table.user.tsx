@@ -73,9 +73,9 @@ const TableUser = () => {
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort, filter) => {
-                    console.log(sort, filter);
+                    console.log(params, sort, filter);
 
-                    const res = await getUsersAPI()
+                    const res = await getUsersAPI(params?.current ?? 1, params?.pageSize ?? 5)
 
                     if (res.data) {
                         setMeta(res.data.meta)
