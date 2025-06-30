@@ -3,7 +3,7 @@ import AppHeader from "components/app.header"
 import { useEffect } from "react"
 import { fetchAccountAPI } from "services/api"
 import { useCurrentApp } from "components/context/app.context"
-import PacmanLoader from "react-spinners/PacmanLoader"
+import HashLoader from "react-spinners/HashLoader"
 
 function Layout() {
   const { setUser, isAppLoading, setIsAppLoading, setIsAuthenticated } = useCurrentApp()
@@ -35,7 +35,7 @@ function Layout() {
           left: "50%",
           transform: "translate(-50%, -50%)"
         }}>
-          <PacmanLoader
+          <HashLoader
             size={30}
             color="#36d6b4"
           />
