@@ -119,7 +119,10 @@ const UpdateUser = (props: IProps) => {
                         labelCol={{ span: 24 }}
                         label="Số điện thoại"
                         name="phone"
-                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập số điện thoại!' },
+                            { pattern: new RegExp(/\d+/g), message: "Số điện thoại không đúng định dạng" }
+                        ]}
                     >
                         <Input />
                     </Form.Item>
