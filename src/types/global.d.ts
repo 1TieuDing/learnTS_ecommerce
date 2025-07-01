@@ -60,4 +60,11 @@ declare global {
         createdAt: Date;
         updatedAt: Date;
     }
+
+    interface IResponseImport {
+        countSuccess: number;
+        countError: number;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        detail: any;
+    }
 }
