@@ -9,6 +9,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { dateRangeValidate } from '@/services/helper';
 import { getBooksAPI } from '@/services/api';
 import CreateBook from './create.book';
+import UpdateBook from './update.book';
 
 type TSearch = {
     mainText: string;
@@ -122,7 +123,7 @@ const TableBook = () => {
                 return (
                     <>
                         <EditTwoTone
-                            twoToneColor="#f57800" style={{ cursor: "pointer", margin: "0 5px" }}
+                            twoToneColor="#f57800" style={{ cursor: "pointer", margin: "0 10px" }}
                             onClick={() => {
                                 setOpenModalUpdate(true);
                                 setDataUpdate(entity);
@@ -142,10 +143,7 @@ const TableBook = () => {
                                 <DeleteTwoTone twoToneColor="#ff4d4f" />
                             </span>
                         </Popconfirm>
-
-
                     </>
-
                 )
             }
         }
@@ -253,6 +251,14 @@ const TableBook = () => {
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={refreshTable}
+            />
+
+            <UpdateBook
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                dataUpdate={dataUpdate}
+                setDataUpdate={setDataUpdate}
             />
         </>
     )
