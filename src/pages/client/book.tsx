@@ -1,20 +1,37 @@
 /* eslint-disable prefer-const */
 import BookDetail from "@/components/client/book/book.detail"
-import { useEffect } from "react"
+import { getBookByIdAPI } from "@/services/api"
+import { App } from "antd"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 const BookPage = () => {
     let { id } = useParams()
+    const { notification } = App.useApp();
+    const [currentBook, setCurrentBook] = useState<IBookTable | null>(null);
 
     useEffect(() => {
         if (id) {
-            console.log("book id = ", id)
+            const fetchBookById = async () => {
+                const res = await getBookByIdAPI(id);
+                if (res && res.data) {
+                    setCurrentBook(res.data);
+                } else {
+                    notification.error({
+                        message: 'Đã có lỗi xảy ra',
+                        description: res.message
+                    })
+                }
+            }
+            fetchBookById();
         }
-    })
+    }, [id])
 
     return (
         <div>
-            <BookDetail />
+            <BookDetail
+                currentBook={currentBook}
+            />
         </div>
     )
 }
