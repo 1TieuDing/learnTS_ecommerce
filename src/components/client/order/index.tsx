@@ -1,13 +1,20 @@
 /* eslint-disable prefer-const */
 import { useCurrentApp } from "@/components/context/app.context";
 import { DeleteTwoTone } from "@ant-design/icons";
-import { Col, Divider, InputNumber, Row } from "antd";
+import { App, Button, Col, Divider, Empty, InputNumber, Row } from "antd";
 import { useEffect, useState } from "react";
 import 'styles/order.scss';
 
-const OrderDetail = () => {
+interface IProps {
+    setCurrentStep: (v: number) => void;
+}
+
+const OrderDetail = (props: IProps) => {
+    const { setCurrentStep } = props;
     const { carts, setCarts } = useCurrentApp();
     const [totalPrice, setTotalPrice] = useState(0);
+
+    const { message } = App.useApp();
 
     useEffect(() => {
         if (carts && carts.length > 0) {
@@ -20,6 +27,14 @@ const OrderDetail = () => {
             setTotalPrice(0);
         }
     }, [carts])
+
+    const handleNextStep = () => {
+        if (!carts.length) {
+            message.error("Không tồn tại sản phẩm trong giỏ hàng.")
+            return;
+        }
+        setCurrentStep(1)
+    }
 
     const handleOnChangeInput = (value: number, book: IBookTable) => {
         if (!value || +value < 1) return;
@@ -95,6 +110,12 @@ const OrderDetail = () => {
                                 </div>
                             )
                         })}
+
+                        {carts.length === 0 &&
+                            <Empty
+                                description="Không có sản phẩm trong giỏ hàng"
+                            />
+                        }
                     </Col>
 
                     <Col md={6} xs={24} >
@@ -113,7 +134,12 @@ const OrderDetail = () => {
                                 </span>
                             </div>
                             <Divider style={{ margin: "10px 0" }} />
-                            <button>Mua Hàng ({carts?.length ?? 0})</button>
+                            <Button
+                                color="danger" variant="solid"
+                                onClick={() => handleNextStep()}
+                            >
+                                Mua Hàng ({carts?.length ?? 0})
+                            </Button>
                         </div>
                     </Col>
                 </Row>

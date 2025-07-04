@@ -5,7 +5,7 @@ export const loginAPI = (username: string, password: string) => {
     const urlBackend = "/api/v1/auth/login";
     return axios.post<IBackendRes<ILogin>>(urlBackend, { username, password }, {
         headers: {
-            delay: 3000
+            delay: 100
         }
     })
 }
@@ -19,7 +19,7 @@ export const fetchAccountAPI = () => {
     const urlBackend = "/api/v1/auth/account";
     return axios.get<IBackendRes<IFetchAccount>>(urlBackend, {
         headers: {
-            delay: 1000
+            delay: 100
         }
     })
 }
@@ -66,7 +66,7 @@ export const getBooksAPI = (query: string) => {
     const urlBackend = `/api/v1/book?${query}`;
     return axios.get<IBackendRes<IModelPaginate<IBookTable>>>(urlBackend, {
         headers: {
-            delay: 1000
+            delay: 100
         }
     })
 }
@@ -117,7 +117,17 @@ export const getBookByIdAPI = (_id: string) => {
     const urlBackend = `/api/v1/book/${_id}`;
     return axios.get<IBackendRes<IBookTable>>(urlBackend, {
         headers: {
-            delay: 3000
+            delay: 100
         }
     })
+}
+
+export const createOrderAPI = (
+    name: string, address: string,
+    phone: string, totalPrice: number,
+    type: string, detail: any
+) => {
+    const urlBackend = "/api/v1/order";
+    return axios.post<IBackendRes<IRegister>>(urlBackend,
+        { name, address, phone, totalPrice, type, detail })
 }
