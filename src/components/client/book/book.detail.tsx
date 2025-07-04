@@ -2,7 +2,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Row, Col, Rate, Divider } from 'antd';
+import { Row, Col, Rate, Divider, App } from 'antd';
 import ImageGallery from 'react-image-gallery';
 import { useEffect, useRef, useState } from 'react';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
@@ -34,7 +34,8 @@ const BookDetail = (props: IProps) => {
 
     const [currentQuantity, setCurrentQuantity] = useState<number>(1);
 
-    const { carts, setCarts } = useCurrentApp();
+    const { setCarts } = useCurrentApp();
+    const { message } = App.useApp();
 
     const handleAddToCart = () => {
         //update localStorage
@@ -71,11 +72,10 @@ const BookDetail = (props: IProps) => {
             localStorage.setItem("carts", JSON.stringify(data))
 
             //sync React Context
-            setCarts(carts);
+            setCarts(data);
         }
+        message.success("Thêm sản phẩm vào giỏ hàng thành công.")
     }
-
-    console.log(carts)
 
     const handleOnClickImage = () => {
         //get current index onClick
