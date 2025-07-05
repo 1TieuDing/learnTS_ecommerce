@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 export { };
 
 declare global {
@@ -104,5 +105,9 @@ declare global {
         totalPrice: number;
         createdAt: Date;
         updatedAt: Date;
+    }
+
+    interface IOrderTable extends IHistory {
+
     }
 }
