@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -50,11 +51,9 @@ const ImportUser = (props: IProps) => {
         async onChange(info) {
             const { status } = info.file;
             if (status !== 'uploading') {
-                console.log(info.file, info.fileList);
             }
 
             if (status === 'done') {
-                console.log(info)
                 message.success(`${info.file.name} file uploaded successfully.`);
 
                 if (info.fileList && info.fileList.length > 0) {
@@ -99,7 +98,6 @@ const ImportUser = (props: IProps) => {
             }
         },
         onDrop(e) {
-            console.log('Dropped files', e.dataTransfer.files);
         },
     }
 

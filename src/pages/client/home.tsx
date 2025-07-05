@@ -9,7 +9,7 @@ import {
 } from 'antd';
 import type { FormProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import 'styles/home.scss';
 
 type FieldType = {
@@ -22,6 +22,7 @@ type FieldType = {
 
 
 const HomePage = () => {
+    const [searchTerm] = useOutletContext() as any;
 
     const [listCategory, setListCategory] = useState<{
         label: string, value: string
@@ -29,7 +30,7 @@ const HomePage = () => {
 
     const [listBook, setListBook] = useState<IBookTable[]>([]);
     const [current, setCurrent] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(5);
+    const [pageSize, setPageSize] = useState<number>(10);
     const [total, setTotal] = useState<number>(0);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -56,7 +57,7 @@ const HomePage = () => {
 
     useEffect(() => {
         fetchBook();
-    }, [current, pageSize, filter, sortQuery]);
+    }, [current, pageSize, filter, sortQuery, searchTerm]);
 
     const fetchBook = async () => {
         setIsLoading(true)
@@ -66,6 +67,10 @@ const HomePage = () => {
         }
         if (sortQuery) {
             query += `&${sortQuery}`;
+        }
+
+        if (searchTerm) {
+            query += `&mainText=/${searchTerm}/i`;
         }
 
         const res = await getBooksAPI(query);
@@ -89,7 +94,6 @@ const HomePage = () => {
 
 
     const handleChangeFilter = (changedValues: any, values: any) => {
-        console.log(">>> check handleChangeFilter", changedValues, values)
         //only fire if category changes
         if (changedValues.category) {
             const cate = values.category;
@@ -117,7 +121,6 @@ const HomePage = () => {
     }
 
     const onChange = (key: string) => {
-        console.log(key);
     };
 
     const items = [
@@ -147,7 +150,7 @@ const HomePage = () => {
     return (
         <>
             <div style={{ background: '#efefef', padding: "20px 0" }}>
-                <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
+                <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto', overflow: "hidden" }}>
                     <Row gutter={[20, 20]}>
                         <Col md={4} sm={0} xs={0}>
                             <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>

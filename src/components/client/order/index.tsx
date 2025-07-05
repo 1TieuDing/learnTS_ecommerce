@@ -1,9 +1,10 @@
 /* eslint-disable prefer-const */
-import { useCurrentApp } from "@/components/context/app.context";
-import { DeleteTwoTone } from "@ant-design/icons";
-import { App, Button, Col, Divider, Empty, InputNumber, Row } from "antd";
-import { useEffect, useState } from "react";
+import { App, Button, Col, Divider, Empty, InputNumber, Row } from 'antd';
+import { DeleteTwoTone } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
+import { useCurrentApp } from '@/components/context/app.context';
 import 'styles/order.scss';
+import { isMobile } from 'react-device-detect';
 
 interface IProps {
     setCurrentStep: (v: number) => void;
@@ -26,15 +27,7 @@ const OrderDetail = (props: IProps) => {
         } else {
             setTotalPrice(0);
         }
-    }, [carts])
-
-    const handleNextStep = () => {
-        if (!carts.length) {
-            message.error("Không tồn tại sản phẩm trong giỏ hàng.")
-            return;
-        }
-        setCurrentStep(1)
-    }
+    }, [carts]);
 
     const handleOnChangeInput = (value: number, book: IBookTable) => {
         if (!value || +value < 1) return;
@@ -72,41 +65,77 @@ const OrderDetail = (props: IProps) => {
         }
     }
 
+    const handleNextStep = () => {
+        if (!carts.length) {
+            message.error("Không tồn tại sản phẩm trong giỏ hàng.")
+            return;
+        }
+        setCurrentStep(1)
+    }
+
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
-            <div className="order-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
+            <div className="order-container" style={{ maxWidth: 1440, margin: '0 auto', overflow: "hidden" }}>
                 <Row gutter={[20, 20]}>
                     <Col md={18} xs={24}>
                         {carts?.map((item, index) => {
                             const currentBookPrice = item?.detail?.price ?? 0;
                             return (
-                                <div className='order-book' key={`index-${index}`}>
-                                    <div className='book-content'>
-                                        <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item?.detail?.thumbnail}`} />
-                                        <div className='title'>
-                                            {item?.detail?.mainText}
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice)}
-                                        </div>
-                                    </div>
-                                    <div className='action'>
-                                        <div className='quantity'>
-                                            <InputNumber
-                                                onChange={(value) => handleOnChangeInput(value as number, item.detail)}
-                                                value={item.quantity}
-                                            />
-                                        </div>
-                                        <div className='sum'>
-                                            Tổng:  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice * (item?.quantity ?? 0))}
-                                        </div>
-                                        <DeleteTwoTone
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => handleRemoveBook(item._id)}
-                                            twoToneColor="#eb2f96"
-                                        />
-
-                                    </div>
+                                <div className='order-book' key={`index-${index}`}
+                                    style={isMobile ? { flexDirection: 'column' } : {}}
+                                >
+                                    {!isMobile ?
+                                        <>
+                                            <div className='book-content'>
+                                                <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item?.detail?.thumbnail}`} />
+                                                <div className='title'>
+                                                    {item?.detail?.mainText}
+                                                </div>
+                                                <div className='price'>
+                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice)}
+                                                </div>
+                                            </div>
+                                            <div className='action'>
+                                                <div className='quantity'>
+                                                    <InputNumber
+                                                        onChange={(value) => handleOnChangeInput(value as number, item.detail)}
+                                                        value={item.quantity}
+                                                    />
+                                                </div>
+                                                <div className='sum'>
+                                                    Tổng:  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice * (item?.quantity ?? 0))}
+                                                </div>
+                                                <DeleteTwoTone
+                                                    style={{ cursor: "pointer" }}
+                                                    onClick={() => handleRemoveBook(item._id)}
+                                                    twoToneColor="#eb2f96"
+                                                />
+                                            </div>
+                                        </>
+                                        :
+                                        <>
+                                            <div>{item?.detail?.mainText}</div>
+                                            <div className='book-content ' style={{ width: "100%" }}>
+                                                <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item?.detail?.thumbnail}`} />
+                                                <div className='action' >
+                                                    <div className='quantity'>
+                                                        <InputNumber
+                                                            onChange={(value) => handleOnChangeInput(value as number, item.detail)}
+                                                            value={item.quantity}
+                                                        />
+                                                    </div>
+                                                    <DeleteTwoTone
+                                                        style={{ cursor: "pointer" }}
+                                                        onClick={() => handleRemoveBook(item._id)}
+                                                        twoToneColor="#eb2f96"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className='sum'>
+                                                Tổng:  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice * (item?.quantity ?? 0))}
+                                            </div>
+                                        </>
+                                    }
                                 </div>
                             )
                         })}
@@ -117,7 +146,6 @@ const OrderDetail = (props: IProps) => {
                             />
                         }
                     </Col>
-
                     <Col md={6} xs={24} >
                         <div className='order-sum'>
                             <div className='calculate'>
@@ -140,6 +168,7 @@ const OrderDetail = (props: IProps) => {
                             >
                                 Mua Hàng ({carts?.length ?? 0})
                             </Button>
+
                         </div>
                     </Col>
                 </Row>
@@ -148,4 +177,4 @@ const OrderDetail = (props: IProps) => {
     )
 }
 
-export default OrderDetail
+export default OrderDetail;
