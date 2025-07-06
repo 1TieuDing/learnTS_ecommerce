@@ -1,18 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from '@/services/axios.customize'
+import createInstanceAxios from 'services/axios.customize';
+
+const axios = createInstanceAxios(import.meta.env.VITE_BACKEND_URL);
+
+// const axiosPayment = createInstanceAxios(import.meta.env.VITE_BACKEND_PAYMENT_URL);
+
+// export const getVNPayUrlAPI = (amount: number, locale: string, paymentRef: string) => {
+//     const urlBackend = "/vnpay/payment-url";
+//     return axiosPayment.post<IBackendRes<{ url: string }>>(urlBackend,
+//         { amount, locale, paymentRef })
+// }
+
+export const updatePaymentOrderAPI = (paymentStatus: string, paymentRef: string) => {
+    const urlBackend = "/api/v1/order/update-payment-status";
+    return axios.post<IBackendRes<ILogin>>(urlBackend,
+        { paymentStatus, paymentRef },
+        {
+            headers: {
+                delay: 1000
+            }
+        }
+    )
+}
 
 export const loginAPI = (username: string, password: string) => {
     const urlBackend = "/api/v1/auth/login";
     return axios.post<IBackendRes<ILogin>>(urlBackend, { username, password }, {
         headers: {
-            delay: 100
+            delay: 1000
         }
     })
 }
 
 export const registerAPI = (fullName: string, email: string, password: string, phone: string) => {
     const urlBackend = "/api/v1/user/register";
-    return axios.post<IBackendRes<ILogin>>(urlBackend, { fullName, email, password, phone })
+    return axios.post<IBackendRes<IRegister>>(urlBackend, { fullName, email, password, phone })
 }
 
 export const fetchAccountAPI = () => {
@@ -26,7 +48,7 @@ export const fetchAccountAPI = () => {
 
 export const logoutAPI = () => {
     const urlBackend = "/api/v1/auth/logout";
-    return axios.post<IBackendRes<ILogin>>(urlBackend)
+    return axios.post<IBackendRes<IRegister>>(urlBackend)
 }
 
 export const getUsersAPI = (query: string) => {
@@ -41,14 +63,14 @@ export const createUserAPI = (fullName: string, email: string,
         { fullName, email, password, phone })
 }
 
-export const bulkCreateUserAPI = (data: {
-    fullName: string,
-    email: string,
-    password: string,
-    phone: string
+export const bulkCreateUserAPI = (hoidanit: {
+    fullName: string;
+    password: string;
+    email: string;
+    phone: string;
 }[]) => {
     const urlBackend = "/api/v1/user/bulk-create";
-    return axios.post<IBackendRes<IResponseImport>>(urlBackend, data)
+    return axios.post<IBackendRes<IResponseImport>>(urlBackend, hoidanit)
 }
 
 export const updateUserAPI = (_id: string, fullName: string, phone: string) => {
@@ -57,28 +79,32 @@ export const updateUserAPI = (_id: string, fullName: string, phone: string) => {
         { _id, fullName, phone })
 }
 
+
 export const deleteUserAPI = (_id: string) => {
     const urlBackend = `/api/v1/user/${_id}`;
     return axios.delete<IBackendRes<IRegister>>(urlBackend)
 }
 
+
 export const getBooksAPI = (query: string) => {
     const urlBackend = `/api/v1/book?${query}`;
-    return axios.get<IBackendRes<IModelPaginate<IBookTable>>>(urlBackend, {
-        headers: {
-            delay: 100
+    return axios.get<IBackendRes<IModelPaginate<IBookTable>>>(urlBackend,
+        {
+            headers: {
+                delay: 100
+            }
         }
-    })
+    )
 }
 
 export const getCategoryAPI = () => {
     const urlBackend = `/api/v1/database/category`;
-    return axios.get<IBackendRes<string[]>>(urlBackend)
+    return axios.get<IBackendRes<string[]>>(urlBackend);
 }
 
 export const uploadFileAPI = (fileImg: any, folder: string) => {
-    const bodyFormData = new FormData()
-    bodyFormData.append('fileImg', fileImg)
+    const bodyFormData = new FormData();
+    bodyFormData.append('fileImg', fileImg);
     return axios<IBackendRes<{
         fileUploaded: string
     }>>({
@@ -92,44 +118,55 @@ export const uploadFileAPI = (fileImg: any, folder: string) => {
     });
 }
 
-export const createBookAPI = (mainText: string, author: string,
+
+export const createBookAPI = (
+    mainText: string, author: string,
     price: number, quantity: number, category: string,
-    thumbnail: string, slider: string[]) => {
+    thumbnail: string, slider: string[]
+) => {
     const urlBackend = "/api/v1/book";
     return axios.post<IBackendRes<IRegister>>(urlBackend,
         { mainText, author, price, quantity, category, thumbnail, slider })
 }
 
-export const updateBookAPI = (_id: string, mainText: string, author: string,
+
+export const updateBookAPI = (
+    _id: string,
+    mainText: string, author: string,
     price: number, quantity: number, category: string,
-    thumbnail: string, slider: string[]) => {
+    thumbnail: string, slider: string[]
+) => {
     const urlBackend = `/api/v1/book/${_id}`;
     return axios.put<IBackendRes<IRegister>>(urlBackend,
         { mainText, author, price, quantity, category, thumbnail, slider })
 }
+
 
 export const deleteBookAPI = (_id: string) => {
     const urlBackend = `/api/v1/book/${_id}`;
     return axios.delete<IBackendRes<IRegister>>(urlBackend)
 }
 
-export const getBookByIdAPI = (_id: string) => {
-    const urlBackend = `/api/v1/book/${_id}`;
-    return axios.get<IBackendRes<IBookTable>>(urlBackend, {
-        headers: {
-            delay: 100
+export const getBookByIdAPI = (id: string) => {
+    const urlBackend = `/api/v1/book/${id}`;
+    return axios.get<IBackendRes<IBookTable>>(urlBackend,
+        {
+            headers: {
+                delay: 100
+            }
         }
-    })
+    )
 }
 
 export const createOrderAPI = (
     name: string, address: string,
     phone: string, totalPrice: number,
-    type: string, detail: any
+    type: string, detail: any,
+    paymentRef?: string
 ) => {
     const urlBackend = "/api/v1/order";
     return axios.post<IBackendRes<IRegister>>(urlBackend,
-        { name, address, phone, totalPrice, type, detail })
+        { name, address, phone, totalPrice, type, detail, paymentRef })
 }
 
 export const getHistoryAPI = () => {
@@ -144,7 +181,6 @@ export const updateUserInfoAPI = (
     return axios.put<IBackendRes<IRegister>>(urlBackend,
         { fullName, phone, avatar, _id })
 }
-
 
 export const updateUserPasswordAPI = (
     email: string, oldpass: string, newpass: string) => {
@@ -166,3 +202,4 @@ export const getDashboardAPI = () => {
         countBook: number;
     }>>(urlBackend)
 }
+
